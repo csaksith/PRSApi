@@ -327,6 +327,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "PRSApi.Controllers.RequestsController",
+    "Method": "GetRequestsbyUser",
+    "RelativePath": "api/Requests/users/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[PRSApi.Models.Request, PRSApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "PRSApi.Controllers.UsersController",
     "Method": "GetUsers",
     "RelativePath": "api/Users",
@@ -434,6 +460,32 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PRSApi.Controllers.UsersController",
+    "Method": "Login",
+    "RelativePath": "api/Users/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userLogin",
+        "Type": "PRSApi.Models.UserLogin",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "PRSApi.Models.User",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "PRSApi.Controllers.VendorsController",

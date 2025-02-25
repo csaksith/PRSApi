@@ -100,7 +100,13 @@ namespace PRSApi.Controllers
 
             return NoContent();
         }
-
+        // GET: api/Requests
+        [HttpGet("users/{userId}")]
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsbyUser(int userId) {
+            var requests = _context.Requests.Include(r => r.User)
+                                            .Where(r=>r.UserId==userId);
+            return await requests.ToListAsync();
+        }
         private bool RequestExists(int id)
         {
             return _context.Requests.Any(e => e.Id == id);
