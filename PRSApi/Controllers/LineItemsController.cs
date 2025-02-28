@@ -30,9 +30,9 @@ namespace PRSApi.Controllers {
         // GET: api/LineItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<LineItem>> GetLineItem(int id) {
-            var lineitem = await _context.LineItems.Include(l => l.Product)
-                                                    .Include(l => l.Request)
-                                                    .FirstOrDefaultAsync(l => l.Id==id);
+            var lineitem = await _context.LineItems.Include(li => li.Product)
+                                                    .Include(li => li.Request)
+                                                    .FirstOrDefaultAsync(li => li.Id==id);
 
             if (lineitem==null) {
                 return NotFound();
@@ -95,18 +95,12 @@ namespace PRSApi.Controllers {
             return NoContent();
         }
 
-        // GET: api/Requests/list-review/7
-        [HttpGet("list-review/{userId}")]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForReview(int userId) {
-            var requests = await _context.Requests
-                .Where(r => r.Status=="REVIEW"&&r.UserId==userId)
-                .ToListAsync();
-            return Ok(requests);
-        }
         // GET: api/LineItems/lines-for-req/8
         [HttpGet("lines-for-req/{reqId}")]
         public async Task<ActionResult<LineItem>> GetLineItemReq(int reqId) {
-            var lineitem = await _context.LineItems
+            var lineitem = await _context.LineItems.Include(li => li.Product)
+                                                        .ThenInclude(p=>p.Vendor) // map vendor
+                                                   .Include(li => li.Request)
                                                    .Where(li => li.RequestId==reqId)
                                                    .ToListAsync();
 

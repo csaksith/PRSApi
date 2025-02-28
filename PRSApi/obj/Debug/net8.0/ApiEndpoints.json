@@ -161,32 +161,6 @@
     ]
   },
   {
-    "ContainingType": "PRSApi.Controllers.LineItemsController",
-    "Method": "GetRequestsForReview",
-    "RelativePath": "api/LineItems/list-review/{userId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[PRSApi.Models.Request, PRSApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
     "ContainingType": "PRSApi.Controllers.ProductsController",
     "Method": "GetProducts",
     "RelativePath": "api/Products",
