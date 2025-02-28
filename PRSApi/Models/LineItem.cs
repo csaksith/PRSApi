@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 namespace PRSApi.Models;
 
 [Table("LineItem")]
-[Index("RequestId", "ProductId", Name = "UC_Req_Pdt", IsUnique = true)]
-public partial class LineItem
-{
+[Index("RequestId","ProductId",Name = "UC_Req_Pdt",IsUnique = true)]
+public partial class LineItem {
+
     [Key]
     [Column("ID")]
     public int Id { get; set; }
@@ -22,7 +22,7 @@ public partial class LineItem
 
     public int Quantity { get; set; }
 
-    //[ForeignKey("ProductId")]
+    //[ForeignKey("Product")]
     //[InverseProperty("LineItems")]
     public Product? Product { get; set; } = null!;
 

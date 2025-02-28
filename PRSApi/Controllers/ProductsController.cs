@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PRSApi.Models;
 
 namespace PRSApi.Controllers {
+
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase {

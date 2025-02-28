@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ConsoleLibrary;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PRSApi.Models;
 
 namespace PRSApi.Controllers {
+
     [Route("api/[controller]")]
     [ApiController]
     public class LineItemsController : ControllerBase {
@@ -40,38 +42,39 @@ namespace PRSApi.Controllers {
         }
 
         // PUT: api/LineItems/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLineItem(int id,LineItem lineItem) {
-            if (id!=lineItem.Id) {
-                return BadRequest();
+        public async Task<IActionResult> PutLineItem(int id,LineItem updatedLineItem) {
+            var lineItem = await _context.LineItems.FindAsync(id);
+            if (id==null) {
+                return NotFound();
             }
 
-            _context.Entry(lineItem).State=EntityState.Modified;
+            lineItem.Quantity=updatedLineItem.Quantity;
+            lineItem.ProductId=updatedLineItem.ProductId;
 
-            try {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException) {
-                if (!LineItemExists(id)) {
-                    return NotFound();
-                }
-                else {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
+            MyConsole.PrintLine($"Updated Line Item: {id}, RequestId: {lineItem.RequestId}");
 
-            return NoContent();
+            await _context.RecalcTotal(lineItem.RequestId);
+
+            return Ok(lineItem);
         }
 
         // POST: api/LineItems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<LineItem>> PostLineItem(LineItem lineItem) {
+            var product = await _context.Products.FindAsync(lineItem.ProductId);
+            if (product==null) {
+                return BadRequest($"Error: Product Id: {lineItem.ProductId} not found.");
+            }
+
             _context.LineItems.Add(lineItem);
             await _context.SaveChangesAsync();
+            MyConsole.PrintLine($"Added Line Item: {lineItem.Id}, RequestId: {lineItem.RequestId}");
 
-            return CreatedAtAction("GetLineItem",new { id = lineItem.Id },lineItem);
+            await _context.RecalcTotal(lineItem.RequestId);
+
+            return Ok(lineItem);
         }
 
         // DELETE: api/LineItems/5
@@ -82,13 +85,17 @@ namespace PRSApi.Controllers {
                 return NotFound();
             }
 
+            int requestId = lineItem.RequestId;
+
             _context.LineItems.Remove(lineItem);
             await _context.SaveChangesAsync();
 
+            MyConsole.PrintLine($"Deleted Line Item: {id}, RequestId: {requestId}");
+            await _context.RecalcTotal(requestId);
             return NoContent();
         }
 
-        private bool LineItemExists(int id) {
+        public bool LineItemExists(int id) {
             return _context.LineItems.Any(e => e.Id==id);
         }
     }

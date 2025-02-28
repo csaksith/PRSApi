@@ -15,4 +15,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="ConsoleLibrary">
+      <HintPath>..\..\c-sharp-instruction\ConsoleLibrary\ConsoleLibrary\bin\Release\net8.0\ConsoleLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
