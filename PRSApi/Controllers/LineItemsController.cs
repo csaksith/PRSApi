@@ -95,6 +95,28 @@ namespace PRSApi.Controllers {
             return NoContent();
         }
 
+        // GET: api/Requests/list-review/7
+        [HttpGet("list-review/{userId}")]
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForReview(int userId) {
+            var requests = await _context.Requests
+                .Where(r => r.Status=="REVIEW"&&r.UserId==userId)
+                .ToListAsync();
+            return Ok(requests);
+        }
+        // GET: api/LineItems/lines-for-req/8
+        [HttpGet("lines-for-req/{reqId}")]
+        public async Task<ActionResult<LineItem>> GetLineItemReq(int reqId) {
+            var lineitem = await _context.LineItems
+                                                   .Where(li => li.RequestId==reqId)
+                                                   .ToListAsync();
+
+            if (lineitem==null) {
+                return NotFound();
+            }
+
+            return Ok(lineitem);
+        }
+
         public bool LineItemExists(int id) {
             return _context.LineItems.Any(e => e.Id==id);
         }
