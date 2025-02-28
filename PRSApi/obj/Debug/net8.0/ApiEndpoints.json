@@ -47,6 +47,32 @@
   },
   {
     "ContainingType": "PRSApi.Controllers.LineItemsController",
+    "Method": "LineItemExists",
+    "RelativePath": "api/LineItems",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Boolean",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "PRSApi.Controllers.LineItemsController",
     "Method": "GetLineItem",
     "RelativePath": "api/LineItems/{id}",
     "HttpMethod": "GET",

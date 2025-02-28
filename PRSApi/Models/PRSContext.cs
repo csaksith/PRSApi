@@ -21,6 +21,8 @@ public partial class PRSContext : DbContext {
 
     public virtual DbSet<Vendor> Vendors { get; set; }
 
+
+    // method to recalculate total
     public async Task RecalcTotal(int requestId) {
         var request = await Requests.FindAsync(requestId);
         if (request==null) {
@@ -31,6 +33,7 @@ public partial class PRSContext : DbContext {
                                        .Where(li => li.RequestId==requestId)
                                        .Include(li => li.Product)
                                        .ToListAsync();
+        // LINQ query using lambda expression
         decimal total = lineItems.Sum(li => li.Product!=null ? li.Quantity*li.Product.Price : 0);
         decimal previousTotal = request.Total;
         request.Total=total;

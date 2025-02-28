@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PRSApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc4a85bf0a44d6c8c4cb2969ccc0b76035170cf3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dbb7c5d967ad6a9bf109646dd58144f61a2aaf23")]
 [assembly: System.Reflection.AssemblyProductAttribute("PRSApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PRSApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
