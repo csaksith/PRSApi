@@ -20,22 +20,28 @@ namespace PRSApi.Controllers {
 
         // GET: api/Requests
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequests() {
-            var requests = _context.Requests.Include(r => r.User);
-            return await requests.ToListAsync();
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequests(int id) {
+            var request = await _context.Requests
+                                            .Include(r => r.User)
+                                            .Include(r => r.LineItems)
+                                            .ThenInclude(li => li.Product)
+                                            .ToListAsync();
+            return Ok(request);
         }
 
         // GET: api/Requests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Request>> GetRequest(int id) {
             var request = await _context.Requests.Include(r => r.User)
+                                                 .Include(r => r.LineItems)
+                                                 .ThenInclude(li => li.Product)
                                                  .FirstOrDefaultAsync(r => r.Id==id);
 
             if (request==null) {
                 return NotFound();
             }
 
-            return request;
+            return Ok(request);
         }
 
         // PUT: api/Requests/5
@@ -104,10 +110,21 @@ namespace PRSApi.Controllers {
 
         // GET: api/Requests/list-review/7
         [HttpGet("list-review/{userId}")]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForReview(int userId) {
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForReview() {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+            var user = await _context.Users.FindAsync(userId);
+            // check if user exists
+            if (user==null) {
+                return NotFound("User not found");
+            }
+            //check if user is a reviewer
+            if (!user.Reviewer) {
+                return NotFound("List Review Access Denied: User is not a reviewer.");
+            }
+            // get all requests in review status and does not include reviewer's own request
             var requests = await _context.Requests
-                .Where(r => r.Status=="REVIEW"&&r.UserId==userId)
-                .ToListAsync();
+               .Where(r => r.Status=="REVIEW"&&r.UserId!=userId)
+               .ToListAsync();
             return Ok(requests);
         }
 

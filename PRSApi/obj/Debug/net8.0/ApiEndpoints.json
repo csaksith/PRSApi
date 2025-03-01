@@ -276,7 +276,13 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[PRSApi.Models.Request, PRSApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -388,7 +394,7 @@
     "Parameters": [
       {
         "Name": "userId",
-        "Type": "System.Int32",
+        "Type": "",
         "IsRequired": true
       }
     ],

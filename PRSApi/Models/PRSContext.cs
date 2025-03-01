@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using ConsoleLibrary;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ public partial class PRSContext : DbContext {
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<Request> Requests { get; set; }
-
+    //[Table("Users")]
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Vendor> Vendors { get; set; }

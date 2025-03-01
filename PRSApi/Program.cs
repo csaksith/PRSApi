@@ -1,3 +1,5 @@
+using ConsoleLibrary;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PRSApi.Models;
 
@@ -12,7 +14,7 @@ namespace PRSApi {
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
             builder.Logging.AddDebug();
-            builder.Services.AddControllers();
+
             builder.Services.AddControllers().AddJsonOptions(opt => {
                 opt.JsonSerializerOptions.ReferenceHandler=
                   System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles; opt.JsonSerializerOptions.WriteIndented=true;
@@ -21,7 +23,7 @@ namespace PRSApi {
             builder.Services.AddDbContext<PRSContext>(
                // lambda
                options => options.UseSqlServer(builder.Configuration.GetConnectionString("PRSConnectionString"))
-               );
+            );
             var app = builder.Build();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
