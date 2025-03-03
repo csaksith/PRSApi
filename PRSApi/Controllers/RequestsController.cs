@@ -70,6 +70,38 @@ namespace PRSApi.Controllers {
             return NoContent();
         }
 
+        // PUT: api/Requests/approve/{id}
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("approve/{id}")]
+        public async Task<IActionResult> ApproveRequest(int id) {
+            var request = await _context.Requests.FindAsync(id);
+            //if (request ==null) {
+            //    return NotFound("Request not found.");
+            //}
+            //var user = await _context.Users.FindAsync(request.UserId);
+            //if (user == null ||!user.Reviewer) {
+            //    return Forbid("Only reviewers can approve request");
+            //}
+            request.Status="APPROVED";
+            await _context.SaveChangesAsync();
+            return Ok(request);
+        }
+
+
+        // PUT: api/Requests/reject/{id}
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("reject/{id}")]
+        public async Task<IActionResult> RejectRequest(int id, Request request) {
+           
+            _context.Entry(request).State=EntityState.Modified;
+            if (request.ReasonForRejection !=null) {
+                request.Status="REJECTED";
+            }
+           
+            await _context.SaveChangesAsync();
+            return Ok(request);
+        }
+
         // POST: api/Requests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

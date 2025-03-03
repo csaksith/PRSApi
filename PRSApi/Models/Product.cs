@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PRSApi.Models;
 
-[Table("Products")]
+[Table("Product")]
 [Index("VendorId", "PartNumber", Name = "UC_Vendor_Part", IsUnique = true)]
 public partial class Product
 {

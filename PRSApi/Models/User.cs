@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace PRSApi.Models;
-[Table("Users")]
+[Table("User")]
 [Index("Username", Name = "UC_UName", IsUnique = true)]
 public partial class User
 {

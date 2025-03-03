@@ -386,6 +386,22 @@
   },
   {
     "ContainingType": "PRSApi.Controllers.RequestsController",
+    "Method": "ApproveRequest",
+    "RelativePath": "api/Requests/approve/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PRSApi.Controllers.RequestsController",
     "Method": "GetRequestsForReview",
     "RelativePath": "api/Requests/list-review/{userId}",
     "HttpMethod": "GET",
@@ -409,6 +425,27 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "PRSApi.Controllers.RequestsController",
+    "Method": "RejectRequest",
+    "RelativePath": "api/Requests/reject/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "PRSApi.Models.Request",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "PRSApi.Controllers.RequestsController",
