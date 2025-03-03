@@ -75,9 +75,9 @@ namespace PRSApi.Controllers {
         [HttpPut("approve/{id}")]
         public async Task<IActionResult> ApproveRequest(int id) {
             var request = await _context.Requests.FindAsync(id);
-            //if (request ==null) {
-            //    return NotFound("Request not found.");
-            //}
+            if (request==null) {
+                return NotFound("Request not found.");
+            }
             //var user = await _context.Users.FindAsync(request.UserId);
             //if (user == null ||!user.Reviewer) {
             //    return Forbid("Only reviewers can approve request");
@@ -109,6 +109,7 @@ namespace PRSApi.Controllers {
             // automatically set new requests as "NEW"
             request.Status="NEW";
             request.Total=0;
+            request.SubmittedDate=DateTime.Now;
             _context.Requests.Add(request);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetRequest",new { id = request.Id },request);
@@ -142,17 +143,13 @@ namespace PRSApi.Controllers {
 
         // GET: api/Requests/list-review/7
         [HttpGet("list-review/{userId}")]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForReview() {
-            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForReview(int userId) {
             var user = await _context.Users.FindAsync(userId);
             // check if user exists
             if (user==null) {
                 return NotFound("User not found");
             }
-            //check if user is a reviewer
-            if (!user.Reviewer) {
-                return NotFound("List Review Access Denied: User is not a reviewer.");
-            }
+       
             // get all requests in review status and does not include reviewer's own request
             var requests = await _context.Requests
                .Where(r => r.Status=="REVIEW"&&r.UserId!=userId)

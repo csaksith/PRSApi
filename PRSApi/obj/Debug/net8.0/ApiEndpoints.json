@@ -410,7 +410,7 @@
     "Parameters": [
       {
         "Name": "userId",
-        "Type": "",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
