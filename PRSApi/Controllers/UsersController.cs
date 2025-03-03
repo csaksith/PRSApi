@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using PRSApi.Models;
 
 namespace PRSApi.Controllers {
@@ -93,10 +94,18 @@ namespace PRSApi.Controllers {
                 .FirstOrDefaultAsync(u => u.Username==userLogin.Username&&u.Password==userLogin.Password);
 
             if (user==null) {
-                return NotFound();
+                return NotFound("Invalid username or password.");
             }
-
-            return user;
+            var userDTO = new {
+                Id = user.Id,
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Reviewer = user.Reviewer,
+                Admin = user.Admin
+            };
+            return Ok(userDTO);
         }
 
         private bool UserExists(int id) {

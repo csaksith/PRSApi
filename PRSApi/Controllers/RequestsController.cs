@@ -18,24 +18,63 @@ namespace PRSApi.Controllers {
             _context=context;
         }
 
+        // Generate Request Number Method
+        private string getNextRequestNumber() {
+            // requestNumber format: R2409230011
+            // 11 chars, 'R' + YYMMDD + 4 digit # w/ leading zeros
+            string requestNbr = "R";
+            // add YYMMDD string
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            requestNbr+=today.ToString("yyMMdd");
+            // get maximum request number from db
+            string maxReqNbr = _context.Requests.Max(r => r.RequestNumber);
+            String reqNbr = "";
+            if (maxReqNbr!=null) {
+                // get last 4 characters, convert to number
+                String tempNbr = maxReqNbr.Substring(7);
+                int nbr = Int32.Parse(tempNbr);
+                nbr++;
+                // pad w/ leading zeros
+                reqNbr+=nbr;
+                reqNbr=reqNbr.PadLeft(4,'0');
+            }
+            else {
+                reqNbr="0001";
+            }
+            requestNbr+=reqNbr;
+            return requestNbr;
+
+        }
+
         // GET: api/Requests
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequests(int id) {
-            var request = await _context.Requests
-                                            .Include(r => r.User)
-                                            .Include(r => r.LineItems)
-                                            .ThenInclude(li => li.Product)
-                                            .ToListAsync();
-            return Ok(request);
+        public async Task<ActionResult<IEnumerable<RequestDTO>>> GetRequests() {
+            var requests = await _context.Requests.Select(request => new RequestDTO {
+                UserId=request.UserId,
+                RequestNumber=request.RequestNumber,
+                Description=request.Description,
+                Justification=request.Justification,
+                DateNeeded=request.DateNeeded,
+                DeliveryMode=request.DeliveryMode,
+            })
+                .ToListAsync();
+            return Ok(requests);
         }
 
         // GET: api/Requests/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Request>> GetRequest(int id) {
-            var request = await _context.Requests.Include(r => r.User)
-                                                 .Include(r => r.LineItems)
-                                                 .ThenInclude(li => li.Product)
-                                                 .FirstOrDefaultAsync(r => r.Id==id);
+        public async Task<ActionResult<RequestDTO>> GetRequest(int id) {
+            var request = await _context.Requests
+                .Where(request => request.Id==id)
+                .Select(request => new RequestDTO {
+                    UserId=request.UserId,
+                    RequestNumber=request.RequestNumber,
+                    Description=request.Description,
+                    Justification=request.Justification,
+                    DateNeeded=request.DateNeeded,
+                    DeliveryMode=request.DeliveryMode,
+                })
+            .FirstOrDefaultAsync();
 
             if (request==null) {
                 return NotFound();
@@ -44,29 +83,57 @@ namespace PRSApi.Controllers {
             return Ok(request);
         }
 
+        // POST: api/Requests
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<RequestDTO>> PostRequest(RequestDTO requestDTO) {
+            var request = new Models.Request {
+                UserId=requestDTO.UserId,
+                RequestNumber=getNextRequestNumber(), // Generates unique request number
+                Description=requestDTO.Description,
+                Justification=requestDTO.Justification,
+                DateNeeded=requestDTO.DateNeeded,
+                DeliveryMode=requestDTO.DeliveryMode,
+                Status="NEW",
+                Total=0,
+                SubmittedDate=DateTime.Now,
+                ReasonForRejection=null
+            };
+
+            _context.Requests.Add(request);
+            await _context.SaveChangesAsync();
+
+            // Return response with the generated ID
+            return CreatedAtAction(nameof(GetRequest),new { id = request.Id },new {
+                id = request.Id,
+                userId = request.UserId,
+                requestNumber=request.RequestNumber,
+                description = request.Description,
+                justification = request.Justification,
+                dateNeeded = request.DateNeeded,
+                deliveryMode = request.DeliveryMode
+            });
+        }
+
+
         // PUT: api/Requests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRequest(int id,Request request) {
-            if (id!=request.Id) {
-                return BadRequest();
+        public async Task<IActionResult> PutRequest(int id,RequestDTO requestDTO) {
+            var request = await _context.Requests.FindAsync(id);
+            if (request==null) {
+                return NotFound("Request not found.");
             }
+
+            // Update fields using DTO
+            request.UserId=requestDTO.UserId;
+            request.Description=requestDTO.Description;
+            request.Justification=requestDTO.Justification;
+            request.DateNeeded=requestDTO.DateNeeded;
+            request.DeliveryMode=requestDTO.DeliveryMode;
             request.Status="NEW";
 
-            _context.Entry(request).State=EntityState.Modified;
-
-            try {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException) {
-                if (!RequestExists(id)) {
-                    return NotFound();
-                }
-                else {
-                    throw;
-                }
-            }
-
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -78,42 +145,27 @@ namespace PRSApi.Controllers {
             if (request==null) {
                 return NotFound("Request not found.");
             }
-            //var user = await _context.Users.FindAsync(request.UserId);
-            //if (user == null ||!user.Reviewer) {
-            //    return Forbid("Only reviewers can approve request");
-            //}
             request.Status="APPROVED";
             await _context.SaveChangesAsync();
             return Ok(request);
         }
 
-
         // PUT: api/Requests/reject/{id}
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("reject/{id}")]
-        public async Task<IActionResult> RejectRequest(int id, Request request) {
-           
-            _context.Entry(request).State=EntityState.Modified;
-            if (request.ReasonForRejection !=null) {
-                request.Status="REJECTED";
+        public async Task<IActionResult> RejectRequest(int id,[FromBody] RequestDTO requestDTO) {
+            var request = await _context.Requests.FindAsync(id);
+            if (request==null) {
+                return NotFound("Request not found.");
             }
-           
+
+            request.Status="REJECTED";
+            request.ReasonForRejection=requestDTO.ReasonForRejection;
             await _context.SaveChangesAsync();
             return Ok(request);
         }
 
-        // POST: api/Requests
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Request>> PostRequest(Request request) {
-            // automatically set new requests as "NEW"
-            request.Status="NEW";
-            request.Total=0;
-            request.SubmittedDate=DateTime.Now;
-            _context.Requests.Add(request);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetRequest",new { id = request.Id },request);
-        }
+
 
         // DELETE: api/Requests/5
         [HttpDelete("{id}")]
@@ -131,10 +183,18 @@ namespace PRSApi.Controllers {
 
         // GET: api/Requests/Users/2
         [HttpGet("users/{userId}")]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsbyUser(int userId) {
-            var requests = _context.Requests.Include(r => r.User)
-                                            .Where(r => r.UserId==userId);
-            return await requests.ToListAsync();
+        public async Task<ActionResult<IEnumerable<RequestDTO>>> GetRequestsbyUser(int userId) {
+            var requests = await _context.Requests
+                .Where(request => request.UserId==userId)
+                .Select(request => new RequestDTO {
+                    UserId=request.UserId,
+                    Description=request.Description,
+                    Justification=request.Justification,
+                    DateNeeded=request.DateNeeded,
+                    DeliveryMode=request.DeliveryMode
+                }).ToListAsync();
+
+            return Ok(requests);
         }
 
         private bool RequestExists(int id) {
@@ -143,13 +203,13 @@ namespace PRSApi.Controllers {
 
         // GET: api/Requests/list-review/7
         [HttpGet("list-review/{userId}")]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForReview(int userId) {
+        public async Task<ActionResult<IEnumerable<RequestDTO>>> GetRequestsForReview(int userId) {
             var user = await _context.Users.FindAsync(userId);
             // check if user exists
             if (user==null) {
                 return NotFound("User not found");
             }
-       
+
             // get all requests in review status and does not include reviewer's own request
             var requests = await _context.Requests
                .Where(r => r.Status=="REVIEW"&&r.UserId!=userId)

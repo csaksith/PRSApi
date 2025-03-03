@@ -28,7 +28,7 @@ public partial class Request
     [Unicode(false)]
     public string Justification { get; set; } = null!;
 
-    public DateOnly DateNeeded { get; set; }
+    public DateTime DateNeeded { get; set; }
 
     [StringLength(25)]
     [Unicode(false)]
