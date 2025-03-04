@@ -43,19 +43,21 @@ namespace PRSApi.Controllers {
             }
             requestNbr+=reqNbr;
             return requestNbr;
-
         }
 
         // GET: api/Requests
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RequestDTO>>> GetRequests() {
             var requests = await _context.Requests.Select(request => new RequestDTO {
+                Id=request.Id,
                 UserId=request.UserId,
                 RequestNumber=request.RequestNumber,
                 Description=request.Description,
                 Justification=request.Justification,
                 DateNeeded=request.DateNeeded,
                 DeliveryMode=request.DeliveryMode,
+                Status=request.Status,
+                Total = request.Total
             })
                 .ToListAsync();
             return Ok(requests);
@@ -67,14 +69,16 @@ namespace PRSApi.Controllers {
             var request = await _context.Requests
                 .Where(request => request.Id==id)
                 .Select(request => new RequestDTO {
+                    Id=request.Id,
                     UserId=request.UserId,
                     RequestNumber=request.RequestNumber,
                     Description=request.Description,
                     Justification=request.Justification,
                     DateNeeded=request.DateNeeded,
                     DeliveryMode=request.DeliveryMode,
-                })
-            .FirstOrDefaultAsync();
+                    Status=request.Status,
+                    Total=request.Total
+                }).FirstOrDefaultAsync();
 
             if (request==null) {
                 return NotFound();
@@ -108,13 +112,15 @@ namespace PRSApi.Controllers {
                 id = request.Id,
                 userId = request.UserId,
                 requestNumber=request.RequestNumber,
-                description = request.Description,
+                description = request.Description, 
                 justification = request.Justification,
                 dateNeeded = request.DateNeeded,
-                deliveryMode = request.DeliveryMode
+                deliveryMode = request.DeliveryMode,
+                status=request.Status,
+                total=request.Total,
+                submittedDate=request.SubmittedDate
             });
         }
-
 
         // PUT: api/Requests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -164,8 +170,6 @@ namespace PRSApi.Controllers {
             await _context.SaveChangesAsync();
             return Ok(request);
         }
-
-
 
         // DELETE: api/Requests/5
         [HttpDelete("{id}")]

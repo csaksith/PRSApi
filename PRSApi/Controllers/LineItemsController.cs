@@ -99,11 +99,9 @@ namespace PRSApi.Controllers {
         [HttpGet("lines-for-req/{reqId}")]
         public async Task<ActionResult<LineItem>> GetLineItemReq(int reqId) {
             var lineitem = await _context.LineItems.Include(li => li.Product)
-                                                        .ThenInclude(p=>p.Vendor) // map vendor
-                                                   .Include(li => li.Request)
+                                                   .Include(li => li.Request) 
                                                    .Where(li => li.RequestId==reqId)
                                                    .ToListAsync();
-
             if (lineitem==null) {
                 return NotFound();
             }
