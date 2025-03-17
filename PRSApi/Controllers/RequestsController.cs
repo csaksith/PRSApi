@@ -127,8 +127,8 @@ namespace PRSApi.Controllers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRequest(int id,RequestDTO requestDTO) {
             var request = await _context.Requests.FindAsync(id);
-            if (request==null) {
-                return NotFound("Request not found.");
+            if (id!=requestDTO.Id) {
+                return BadRequest("RequestId mismatch.");
             }
 
             // Update fields using DTO

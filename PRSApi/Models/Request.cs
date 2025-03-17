@@ -31,7 +31,7 @@ public partial class Request
     public DateTime DateNeeded { get; set; }
 
     [StringLength(25)]
-    [Unicode(false)]
+    [Unicode(false)] 
     public string DeliveryMode { get; set; } = null!;
 
     [Column("STATUS")]

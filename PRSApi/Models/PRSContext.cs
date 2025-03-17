@@ -38,14 +38,6 @@ public partial class PRSContext : DbContext {
         decimal total = lineItems.Sum(li => li.Product!=null ? li.Quantity*li.Product.Price : 0);
         decimal previousTotal = request.Total;
         request.Total=total;
-        // if user changes line item quantity to be more than $50 revert status to "NEW"
-        if (previousTotal<=50&&total>50) {
-            request.Status="NEW";
-        }
-        // auto approve request if <$50
-        else if (total<=50) {
-            request.Status="APPROVED";
-        }
 
         int changes = await SaveChangesAsync();
     }

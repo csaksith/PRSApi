@@ -1,11 +1,10 @@
 USE prs_db;
-GO
 SELECT *
-  FROM [User];
+  FROM User;
 SELECT *
   FROM Vendor;
 SELECT *
-  FROM [Product];
+  FROM Product;
 SELECT *
   FROM Request;
 SELECT *
