@@ -35,8 +35,13 @@ VALUES
 (2, 2, 3),   -- Request 2: 3 jars of Acrylic Powder
 (2, 6, 1),   -- Request 2: 1 Nail Drill Machine
 (3, 3, 20),  -- Request 3: 20 packs of Nail Files
-(3, 4, 2);   -- Request 3: 2 Electric Nail Buffers
+(3, 4, 2);   -- Request 3: 2 Electric Nail Bufferusers
 
-CREATE USER 'new_username'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON prs_db.* TO 'new_username'@'localhost';
-FLUSH PRIVILEGES;
+DROP USER IF EXISTS prs_user@localhost;
+CREATE USER prs_user@localhost IDENTIFIED BY 'sesame';
+GRANT SELECT, INSERT, DELETE, UPDATE ON prs_db.* TO prs_user@localhost;
+
+SELECT * FROM movie WHERE rating = 'R';
+
+SELECT *
+FROM lineitem;

@@ -44,6 +44,8 @@ namespace PRSApi.Controllers {
         // PUT: api/LineItems/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLineItem(int id,LineItem updatedLineItem) {
+            nullifyAndSetId(lineItem);
+
             var lineItem = await _context.LineItems.FindAsync(id);
             if (id==null) {
                 return NotFound();
@@ -63,6 +65,7 @@ namespace PRSApi.Controllers {
         // POST: api/LineItems
         [HttpPost]
         public async Task<ActionResult<LineItem>> PostLineItem(LineItem lineItem) {
+            nullifyAndSetId(lineItem);
             var product = await _context.Products.FindAsync(lineItem.ProductId);
             if (product==null) {
                 return BadRequest($"Error: Product Id: {lineItem.ProductId} not found.");
@@ -77,8 +80,23 @@ namespace PRSApi.Controllers {
             return Ok(lineItem);
         }
 
-        // DELETE: api/LineItems/5
-        [HttpDelete("{id}")]
+        // diff between java and .net projects
+        // front end sends "fully qualified" lineItem with request and product instances
+        // these need to be nulled-out and the respective requestId and productId needs to be set
+        public void nullifyAndSetId(LineItem lineItem) {
+            Console.WriteLine("LI Nullify: LI: "+lineItem.ToString());
+            if (lineItem.Request !=null) {
+                lineItem.RequestId=lineItem.Request.Id;
+            }
+                lineItem.Request=null;
+            if (lineItem.Product!=null) {
+                lineItem.ProductId=lineItem.Product.Id;
+            }
+            lineItem.Product=null;
+
+
+            // DELETE: api/LineItems/5
+            [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLineItem(int id) {
             var lineItem = await _context.LineItems.FindAsync(id);
             if (lineItem==null) {

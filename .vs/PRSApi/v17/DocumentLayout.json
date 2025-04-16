@@ -54,9 +54,9 @@
               "Title": "PRSContext.cs",
               "DocumentMoniker": "C:\\repos\\max\\c-sharp-repos\\PRSApi\\PRSApi\\Models\\PRSContext.cs",
               "RelativeDocumentMoniker": "PRSApi\\Models\\PRSContext.cs",
-              "ToolTip": "C:\\repos\\max\\c-sharp-repos\\PRSApi\\PRSApi\\Models\\PRSContext.cs*",
-              "RelativeToolTip": "PRSApi\\Models\\PRSContext.cs*",
-              "ViewState": "AgIAABYAAAAAAAAAAAAkwCcAAAAcAAAAAAAAAA==",
+              "ToolTip": "C:\\repos\\max\\c-sharp-repos\\PRSApi\\PRSApi\\Models\\PRSContext.cs",
+              "RelativeToolTip": "PRSApi\\Models\\PRSContext.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAUwBMAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-13T20:14:27.905Z",
               "EditorCaption": ""
@@ -71,8 +71,7 @@
               "RelativeToolTip": "PRSApi\\Models\\LineItem.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-13T20:11:40.039Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-13T20:11:40.039Z"
             },
             {
               "$type": "Document",
@@ -84,8 +83,7 @@
               "RelativeToolTip": "PRSApi\\Controllers\\LineItemsController.cs",
               "ViewState": "AgIAABsAAAAAAAAAAAAYwFYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-04T12:00:58.623Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-04T12:00:58.623Z"
             },
             {
               "$type": "Document",
@@ -97,8 +95,7 @@
               "RelativeToolTip": "PRSApi\\Models\\Request.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAAwCMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T20:01:22.018Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-03T20:01:22.018Z"
             },
             {
               "$type": "Document",
@@ -110,8 +107,7 @@
               "RelativeToolTip": "PRSApi\\Models\\RequestDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T20:01:13.514Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-03T20:01:13.514Z"
             },
             {
               "$type": "Document",
@@ -159,8 +155,7 @@
               "RelativeToolTip": "PRSApi\\Controllers\\RequestsController.cs",
               "ViewState": "AgIAAMsAAAAAAAAAAAAUwPIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T14:46:03.669Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-03T14:46:03.669Z"
             }
           ]
         }

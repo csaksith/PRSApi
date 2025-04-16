@@ -160,10 +160,12 @@ namespace PRSApi.Controllers {
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("reject/{id}")]
         public async Task<IActionResult> RejectRequest(int id,[FromBody] RequestDTO requestDTO) {
+
             var request = await _context.Requests.FindAsync(id);
             if (request==null) {
                 return NotFound("Request not found.");
             }
+            nullifyAndSetId(request);
 
             request.Status="REJECTED";
             request.ReasonForRejection=requestDTO.ReasonForRejection;
@@ -221,6 +223,14 @@ namespace PRSApi.Controllers {
             return Ok(requests);
         }
 
+        public void nullifyAndSetId(Request request) {
+            Console.WriteLine("Request Nullify: Request: "+request.ToString());
+            if (request.User!=null) {
+                request.UserId=request.User.Id;
+            }
+            request.User=null;
+        }
+
         // PUT: api/Requests/submit-review
         [HttpPut("submit-review/{id}")]
         public async Task<IActionResult> SubmitReview(int id) {
@@ -229,6 +239,8 @@ namespace PRSApi.Controllers {
             if (request==null) {
                 return NotFound("Request not found.");
             }
+            nullifyAndSetId(request);
+
             // prevent duplicate submissions
             if (request.Status!="NEW") {
                 return BadRequest("Request already submitted.");
